@@ -1,0 +1,14 @@
+{
+  "name": "scripture-golf",
+  "description": "scripture-golf: An Ionic project",
+  "author": "John Woodruff",
+  "homepage": "http://scripture-golf.com",
+  "private": true,
+  "scripts": {
+    "start": "http-server ./ -p 4200 -a localhost"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  }
+}
