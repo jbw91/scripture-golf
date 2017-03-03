@@ -3,8 +3,11 @@ import { AlertOptions, AlertController, Platform, LoadingController, Loading } f
 import { Game, Scriptures, SgToast, Sql } from '../../../providers/index';
 import { Scripture, Player, Book, Settings } from '../../../models/index';
 
-const GUESSING_STATE_BOOK = 'BOOK';
-const GUESSING_STATE_CHAPTER = 'CHAPTER';
+const STATES = {
+  VOLUME: 'VOLUME',
+  BOOK: 'BOOK',
+  CHAPTER: 'CHAPTER'
+};
 
 @Component({
   selector: 'game-gameplay',
@@ -25,6 +28,7 @@ export class GameGameplay {
   chapterGuess: number;
   showVerse: boolean;
   guessingState: string;
+  selectedVolume: string;
   bookOfMormon: string;
   doctrineAndCovenants: string;
   pearlOfGreatPrice: string;
@@ -46,6 +50,7 @@ export class GameGameplay {
     };
     this.currPlayer = new Player('Player 1', 1);
     this.currScripture = {
+      volume: '',
       book: '',
       chapter: 0,
       verse: ''
@@ -71,7 +76,9 @@ export class GameGameplay {
   resetRound() {
     this.guessedChapters = [];
     this.showVerse = true;
-    this.guessingState = GUESSING_STATE_BOOK;
+    // TODO: CHANGE THIS TO THE VOLUME
+    // this.guessingState = STATES.BOOK;
+    this.guessingState = STATES.VOLUME;
     this.bookOfMormon = null;
     this.doctrineAndCovenants = null;
     this.pearlOfGreatPrice = null;
@@ -132,6 +139,7 @@ export class GameGameplay {
 
   changeScripture() {
     this.currScripture = this.scriptures[this.currScriptureIndex];
+    console.log(this.currScripture);
   }
 
   selectionChanged(select: string) {
@@ -152,13 +160,32 @@ export class GameGameplay {
     }
   }
 
+  checkVolume() {
+    if(this.selectedVolume) {
+      if(this.selectedVolume === this.currScripture.volume) {
+        // Answer is correct
+        this.toastService.showToast('Great job!');
+        this.guessingState = STATES.BOOK;
+      }
+      else {
+        // Answer is incorrect, add point
+        this.toastService.showToast('Sorry. Guess again.');
+        this.currPlayer.addPoint(this.currRound);
+        this.selectedVolume = null;
+      }
+    }
+    else {
+      this.toastService.showToast('Please choose a volume to guess');
+    }
+  }
+
   checkBook() {
     if (this.bookOfMormon || this.doctrineAndCovenants || this.pearlOfGreatPrice || this.oldTestament || this.newTestament) {
       let book = this.currScripture.book;
       if (this.bookOfMormon === book || this.doctrineAndCovenants === book || this.pearlOfGreatPrice === book || this.oldTestament === book || this.newTestament === book) {
         // Answer is correct
         this.toastService.showToast('Great job!');
-        this.guessingState = GUESSING_STATE_CHAPTER;
+        this.guessingState = STATES.CHAPTER;
       }
       else {
         // Answer is incorrect, add point
@@ -172,7 +199,6 @@ export class GameGameplay {
       }
     }
     else {
-      // SHOW TOAST ABOUT PICKING ANSWER
       this.toastService.showToast('Please choose a book to guess');
     }
   }

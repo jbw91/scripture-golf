@@ -84,9 +84,10 @@ export class Scriptures {
   public getScripturesByVolume(volume): Promise<Scripture[]> {
     let promise = new Promise((resolve, reject) => {
       this.storage.query(`SELECT * FROM scriptures WHERE volume='${volume}'`).then((response) => {
-        let scriptureList = [];
+        let scriptureList: Scripture[] = [];
         for(let i = 0; i < response.res.rows.length; i++) {
           scriptureList.push({
+            volume: response.res.rows.item(i).volume,
             book: response.res.rows.item(i).book,
             chapter: response.res.rows.item(i).chapter,
             verse: response.res.rows.item(i).verse

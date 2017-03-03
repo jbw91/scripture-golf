@@ -16,24 +16,6 @@
         </div>
       </div>
     </div>
-    <!--<ion-grid>
-      <ion-row>
-        <ion-col width-50>
-          <h3>{{currPlayer.name}}</h3>
-          <h6>Round {{currRound}}</h6>
-        </ion-col>
-        <ion-col width-50>
-          <div class="points-box">
-            <div class="points-header">
-              <h4>Points</h4>
-            </div>
-            <div class="points-footer">
-              <h4>{{currPlayer.getScore()}}</h4>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>-->
 
     <ion-card *ngIf="showVerse">
       <ion-card-content>
@@ -41,36 +23,69 @@
       </ion-card-content>
     </ion-card>
     <div *ngIf="!showVerse">
+      <!--VOLUME GUESSING STATE-->
+      <div *ngIf="guessingState==='VOLUME'">
+        <ion-list radio-group [(ngModel)]="selectedVolume">
+          <ion-list-header>
+            Volume of Scripture
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Book of Mormon</ion-label>
+            <ion-radio value="BOM"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Doctrine and Covenants</ion-label>
+            <ion-radio value="DC"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Pearl of Great Price</ion-label>
+            <ion-radio value="PGP"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Old Testament</ion-label>
+            <ion-radio value="OT"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>New Testament</ion-label>
+            <ion-radio value="NT"></ion-radio>
+          </ion-item>
+        </ion-list>
+        <button ion-button color="primary" class="float-right margin-bottom" (click)="checkVolume()">
+          Check Answer
+        </button>
+      </div>
+
+      <!--BOOK GUESSING STATE-->
       <div *ngIf="guessingState==='BOOK'">
         <ion-list>
           <ion-list-header>
             Book of Scripture
           </ion-list-header>
-          <ion-item *ngIf="settings.bookOfMormon">
+          <ion-item *ngIf="currScripture.volume==='BOM'">
             <ion-label>Book of Mormon</ion-label>
             <ion-select class="margin-none" [selectOptions]="selectOptions" placeholder="Choose One" [(ngModel)]="bookOfMormon" (ionChange)="selectionChanged('BOM')">
               <ion-option *ngFor="let book of books | book:'BOM'" value="{{book.title}}">{{book.title}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item *ngIf="settings.doctrineAndCovenants">
+          <ion-item *ngIf="currScripture.volume==='DC'">
             <ion-label>Doctrine & Covenants</ion-label>
             <ion-select class="margin-none" [selectOptions]="selectOptions" placeholder="Choose One" [(ngModel)]="doctrineAndCovenants" (ionChange)="selectionChanged('DC')">
               <ion-option *ngFor="let book of books | book:'DC'" value="{{book.title}}">{{book.title}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item *ngIf="settings.pearlOfGreatPrice">
+          <ion-item *ngIf="currScripture.volume==='PGP'">
             <ion-label>Pearl of Great Price</ion-label>
             <ion-select class="margin-none" [selectOptions]="selectOptions" placeholder="Choose One" [(ngModel)]="pearlOfGreatPrice" (ionChange)="selectionChanged('PGP')">
               <ion-option *ngFor="let book of books | book:'PGP'" value="{{book.title}}">{{book.title}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item *ngIf="settings.oldTestament">
+          <ion-item *ngIf="currScripture.volume==='OT'">
             <ion-label>Old Testament</ion-label>
             <ion-select class="margin-none" [selectOptions]="selectOptions" placeholder="Choose One" [(ngModel)]="oldTestament" (ionChange)="selectionChanged('OT')">
               <ion-option *ngFor="let book of books | book:'OT'" value="{{book.title}}">{{book.title}}</ion-option>
             </ion-select>
           </ion-item>
-          <ion-item *ngIf="settings.newTestament">
+          <ion-item *ngIf="currScripture.volume==='NT'">
             <ion-label>New Testament</ion-label>
             <ion-select class="margin-none" [selectOptions]="selectOptions" placeholder="Choose One" [(ngModel)]="newTestament" (ionChange)="selectionChanged('NT')">
               <ion-option *ngFor="let book of books | book:'NT'" value="{{book.title}}">{{book.title}}</ion-option>
@@ -82,6 +97,8 @@
         </button>
         <div class="clear"></div>
       </div>
+
+      <!--CHAPTER GUESSING STATE-->
       <div *ngIf="guessingState==='CHAPTER'">
         <h5 class="chapter-header">Guess the Chapter</h5>
         <ion-grid>
