@@ -1,7 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
-import {Http} from '@angular/http';
 import {Platform, Nav, AlertController} from 'ionic-angular';
-import {Splashscreen, StatusBar, GoogleAnalytics, AppVersion, HeaderColor} from 'ionic-native';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { AppVersion } from '@ionic-native/app-version';
+import { HeaderColor } from '@ionic-native/header-color';
 import {HomePage} from '../pages/home/home';
 import {AboutPage} from '../pages/about/about';
 import {SettingsPage} from '../pages/settings/settings';
@@ -9,6 +12,13 @@ import {SgToast, Scriptures} from '../providers/index';
 
 @Component({
   templateUrl: 'app.html',
+  providers: [
+    SplashScreen,
+    StatusBar,
+    GoogleAnalytics,
+    AppVersion,
+    HeaderColor
+  ]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -17,7 +27,7 @@ export class MyApp {
   pages: Array<{title: string, component: any}>;
   isWindows: boolean;
 
-  constructor(public platform: Platform, public toastService: SgToast, public alertCtrl: AlertController, public http: Http, public scriptures: Scriptures) {
+  constructor(public platform: Platform, public toastService: SgToast, public alertCtrl: AlertController, public scriptures: Scriptures, public splashScreen: SplashScreen, public statusBar: StatusBar, public googleAnalytics: GoogleAnalytics, public appVersion: AppVersion, public headerColor: HeaderColor) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -31,17 +41,17 @@ export class MyApp {
   initializeApp() {
     this.platform.ready().then(() => {
       this.isWindows = this.platform.is('windows');
-      HeaderColor.tint('#5AA02E');
-      StatusBar.backgroundColorByHexString('#36601C');
-      StatusBar.styleLightContent();
-      StatusBar.show();
-      Splashscreen.hide();
+      this.headerColor.tint('#5AA02E');
+      this.statusBar.backgroundColorByHexString('#36601C');
+      this.statusBar.styleLightContent();
+      this.statusBar.show();
+      this.splashScreen.hide();
       if(this.platform.is('cordova') && !this.isWindows) {
-        GoogleAnalytics.startTrackerWithId('UA-46243905-10').then(() => {
+        this.googleAnalytics.startTrackerWithId('UA-46243905-10').then(() => {
           console.log('STARTED TRACKING VIA GOOGLE ANALYTICS');
-          AppVersion.getVersionNumber().then((version) => {
+          this.appVersion.getVersionNumber().then((version) => {
             console.log('SET APP VERSION IN ANALYTICS: ' + version);
-            GoogleAnalytics.setAppVersion(version);
+            this.googleAnalytics.setAppVersion(version);
           });
         });
       }

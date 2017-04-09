@@ -1,4 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { MyApp } from './app.component';
@@ -40,6 +42,8 @@ const cloudSettings: CloudSettings = {
     UserPopover
   ],
   imports: [
+    BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
     CloudModule.forRoot(cloudSettings)
   ],
