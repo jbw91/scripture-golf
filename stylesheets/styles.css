@@ -102,7 +102,7 @@ img {
 }
 
 header {
-  width:270px;
+  width: 330px;
   float:left;
   position:fixed;
   -webkit-font-smoothing:subpixel-antialiased;
@@ -167,6 +167,18 @@ header ul a strong {
   color:#222;
 }
 
+header .app-store-buttons {
+  display: inline;
+}
+
+header .app-store-buttons .android-store {
+  height: 60px;
+}
+header .app-store-buttons .ios-store {
+  height: 40px;
+  padding: 10px;
+}
+
 section {
   width:500px;
   float:right;
@@ -190,6 +202,13 @@ footer {
   position:fixed;
   bottom:50px;
   -webkit-font-smoothing:subpixel-antialiased;
+}
+
+.attribution {
+  font-size: 10px;
+  font-style: italic;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 @media print, screen and (max-width: 960px) {
