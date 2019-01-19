@@ -83,7 +83,7 @@ export class GameGameplay {
   /* GAME SETUP */
 
   selectScriptures(): Promise<boolean> {
-    let p = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let allScriptures: Scripture[], numScriptures: number;
       this.scriptureService.getScriptures().then((data) => {
         // Ensure scriptures are sufficiently randomized.
@@ -98,7 +98,6 @@ export class GameGameplay {
         resolve(true);
       });
     });
-    return p;
   }
 
   getBooks() {

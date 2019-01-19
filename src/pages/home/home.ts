@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
 import {NavController, Platform, PopoverController} from 'ionic-angular';
-import {GoogleAnalytics, SocialSharing} from 'ionic-native';
-import {Auth, User, FacebookAuth} from '@ionic/cloud-angular';
+import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { SocialSharing } from '@ionic-native/social-sharing';
+import { Facebook } from '@ionic-native/facebook';
+import firebase from 'firebase';
+
 import {SgToast} from '../../providers'
-import {StatsPage} from '../stats/stats';
 import {GamePage} from '../game/game';
 import {SettingsPage} from '../settings/settings';
 import {AboutPage} from '../about/about';
@@ -19,7 +21,7 @@ export class HomePage {
   currUser: any;
   isWindows: boolean;
 
-  constructor(public nav: NavController, public platform: Platform, public popoverCtrl: PopoverController, public auth: Auth, public user: User, public facebookAuth: FacebookAuth, public toastService: SgToast) {
+  constructor(public nav: NavController, public platform: Platform, public popoverCtrl: PopoverController, public toastService: SgToast, private analytics: GoogleAnalytics, private socialSharing: SocialSharing, private facebook: Facebook) {
     this.currUser = {
       id: '0',
       name: ''
@@ -28,19 +30,16 @@ export class HomePage {
     this.platform.ready().then(() => {
       this.isWindows = this.platform.is('windows');
       if(this.platform.is('cordova')) {
-        this.isAuthenticated = this.auth.isAuthenticated();
-        // Google Analytics and user settings no applicable on Windows Phone
-        if(!this.isWindows) {
-          GoogleAnalytics.trackView('Home Page');
+        // this.isAuthenticated = this.auth.isAuthenticated();
+        this.analytics.trackView('Home Page');
 
-          if(this.user.social.facebook && this.user.social.facebook.uid) {
-            this.currUser = {
-              id: this.user.social.facebook.uid,
-              name: this.user.social.facebook.data.full_name,
-              photo: this.user.social.facebook.data.profile_picture
-            };
-          }
-        }
+        // if(this.user.social.facebook && this.user.social.facebook.uid) {
+        //   this.currUser = {
+        //     id: this.user.social.facebook.uid,
+        //     name: this.user.social.facebook.data.full_name,
+        //     photo: this.user.social.facebook.data.profile_picture
+        //   };
+        // }
       }
     });
 
@@ -50,20 +49,31 @@ export class HomePage {
   }
 
   authenticate() {
-    this.facebookAuth.login().then(() => {
-      this.currUser = {
-        id: this.user.social.facebook.uid,
-        name: this.user.social.facebook.data.full_name,
-        photo: this.user.social.facebook.data.profile_picture
-      };
-      this.toastService.showToast('Successfully signed in');
+    let provider = new firebase.auth.FacebookAuthProvider();
+    this.facebook.login(['email', 'public_profile']).then((response) => {
+      console.log('FINISHED AUTH PROCESS');
+      console.log(JSON.stringify(response));
+      const facebookCredential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+      console.log(JSON.stringify(facebookCredential));
+
+      firebase.auth().signInWithCredential(facebookCredential).then((success) => {
+        console.log('SUCCESS' + JSON.stringify(success));
+      })
     });
+    // this.facebookAuth.login().then(() => {
+    //   this.currUser = {
+    //     id: this.user.social.facebook.uid,
+    //     name: this.user.social.facebook.data.full_name,
+    //     photo: this.user.social.facebook.data.profile_picture
+    //   };
+    //   this.toastService.showToast('Successfully signed in');
+    // });
   }
 
   logout() {
-    this.facebookAuth.logout();
-    this.user.clear();
-    this.user.social.facebook.uid = null;
+    // this.facebookAuth.logout();
+    // this.user.clear();
+    // this.user.social.facebook.uid = null;
     this.currUser = {
       id: '0',
       name: ''
@@ -78,9 +88,6 @@ export class HomePage {
         break;
       case 'settings':
         this.nav.setRoot(SettingsPage);
-        break;
-      case 'stats':
-        this.nav.push(StatsPage);
         break;
       case 'game':
         this.nav.setRoot(GamePage);
@@ -105,7 +112,7 @@ export class HomePage {
 
   share() {
     let message = 'I love playing Scripture Golf! You should download it too! #ScriptureGolf';
-    SocialSharing.share(message, 'Scripture Golf', SG_IMAGE_URL, 'https://www.facebook.com/ldsscripturegolf/').then(() => {
+    this.socialSharing.share(message, 'Scripture Golf', SG_IMAGE_URL, 'https://www.facebook.com/ldsscripturegolf/').then(() => {
       console.log('Shared');
     }).catch(() => {
       this.toastService.showToast('Cannot share at this time');

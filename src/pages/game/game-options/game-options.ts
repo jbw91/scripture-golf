@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Auth, User } from '@ionic/cloud-angular';
 import { Game } from '../../../providers/index';
 import { Player } from '../../../models/index';
 
@@ -13,7 +12,7 @@ export class GameOptions {
   numRounds: number;
   sameScriptures: string;
 
-  constructor(public auth: Auth, public user: User, public gameCtrl: Game) {
+  constructor(public gameCtrl: Game) {
     this.numPlayers = 1;
     this.numRounds = 1;
     this.sameScriptures = 'true';
@@ -29,9 +28,11 @@ export class GameOptions {
     for(let i = 1; i <= this.numPlayers; i++) {
       let name = 'Player ' + i;
       if(i === 1) {
-        if(this.auth.isAuthenticated()) {
-          name = this.user.social.facebook.data.full_name;
-        }
+        // TODO:
+        // if(this.auth.isAuthenticated()) {
+        //   // TODO: GET USER NAME
+        //   // name = this.user.social.facebook.data.full_name;
+        // }
       }
       let p = new Player(name, i);
       players.push(p);

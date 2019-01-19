@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/map';
 import { ToastController, ToastOptions, Platform } from 'ionic-angular';
 
 @Injectable()

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { GameOptionsConfig, Player } from '../../models/index';
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class Game {

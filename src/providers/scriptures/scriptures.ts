@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Sql } from '../sql/sql';
 import { Scripture, Book, Settings } from '../../models/index';
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class Scriptures {
@@ -16,7 +15,7 @@ export class Scriptures {
   }
 
   public initializeScriptures(): Promise<boolean> {
-    const promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       // If settings don't exist, initialize them as they are needed for games.
       this.storage.get('settings').then((data) => {
         if(!data) {
@@ -78,11 +77,10 @@ export class Scriptures {
         });
       });
     });
-    return promise;
   }
 
   public getScripturesByVolume(volume): Promise<Scripture[]> {
-    let promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.storage.query(`SELECT * FROM scriptures WHERE volume='${volume}'`).then((response) => {
         let scriptureList = [];
         for(let i = 0; i < response.res.rows.length; i++) {
@@ -97,11 +95,10 @@ export class Scriptures {
         reject();
       });
     });
-    return promise;
   }
 
   public getScriptures(): Promise<Scripture[]> {
-    let promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.storage.get('settings').then((data: string) => {
         let settings: Settings = JSON.parse(data);
         let promises = [
@@ -136,11 +133,10 @@ export class Scriptures {
         });
       });
     });
-    return promise;
   }
 
   public getBooks(): Promise<Book[]> {
-    let promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if(this.books.length > 0) {
         resolve(this.books);
       }
@@ -158,7 +154,6 @@ export class Scriptures {
         });
       }
     });
-    return promise;
   }
 
   // When there are updates, have methods that are called with the new scripture sets.

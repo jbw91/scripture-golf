@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ViewController, Platform } from 'ionic-angular';
-import { User } from '@ionic/cloud-angular';
 
 @Component({
   template: `
@@ -22,20 +21,21 @@ import { User } from '@ionic/cloud-angular';
 export class UserPopover {
   currUser: any;
 
-  constructor(public viewCtrl: ViewController, public platform: Platform, public user: User) {
+  constructor(public viewCtrl: ViewController, public platform: Platform) {
     this.currUser = {
       id: '0',
       name: ''
     };
 
     this.platform.ready().then(() => {
-      if(this.user.social.facebook && this.user.social.facebook.uid) {
-        this.currUser = {
-          id: this.user.social.facebook.uid,
-          name: this.user.social.facebook.data.full_name,
-          photo: this.user.social.facebook.data.profile_picture
-        };
-      }
+      // TODO: Get user some other way
+      // if(this.user.social.facebook && this.user.social.facebook.uid) {
+      //   this.currUser = {
+      //     id: this.user.social.facebook.uid,
+      //     name: this.user.social.facebook.data.full_name,
+      //     photo: this.user.social.facebook.data.profile_picture
+      //   };
+      // }
     });
   }
 

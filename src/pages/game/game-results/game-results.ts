@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { SocialSharing } from 'ionic-native';
+import { SocialSharing } from '@ionic-native/social-sharing';
 
 import { Game, SgToast } from '../../../providers/index';
 import { Player } from '../../../models/index';
@@ -17,7 +17,7 @@ export class GameResults {
   numRounds: number;
   numPlayers: number;
 
-  constructor(public gameCtrl: Game, public toastCtrl: SgToast) {
+  constructor(public gameCtrl: Game, public toastCtrl: SgToast, private socialSharing: SocialSharing) {
     this.players = this.gameCtrl.players;
     this.numPlayers = this.gameCtrl.options.numPlayers;
     this.numRounds = this.gameCtrl.options.numRounds;
@@ -43,7 +43,7 @@ export class GameResults {
     else {
       message = `Just finished a game of #ScriptureGolf with my friends!`;
     }
-    SocialSharing.share(message, 'Scripture Golf', SG_IMAGE_URL, 'https://www.facebook.com/ldsscripturegolf/').then(() => {
+    this.socialSharing.share(message, 'Scripture Golf', SG_IMAGE_URL, 'https://www.facebook.com/ldsscripturegolf/').then(() => {
       console.log('Shared');
     }).catch(() => {
       this.toastCtrl.showToast('Cannot share at this time');
