@@ -4,4 +4,4 @@
 https://scripture-golf.com/* https://scripturegolf.com/:splat 301!
 
 # Optional: Redirect default Netlify subdomain to primary domain
-https://heuristic-shirley-bb46f3.netlify.com/* https://scripturegolf.com/:splat 301!
+https://scripture-golf.netlify.com/* https://scripturegolf.com/:splat 301!
